@@ -329,49 +329,44 @@
     }
   };
 
-  // YouTube search via Invidious (sem API key)
+  const YT_KEY = "AIzaSyAu08I7Nw-qIh4BMc1g9YwdiHqzMFUnBdU";
+
   window.searchMusic = async function() {
     const q = document.getElementById("musicSearch").value.trim();
     if (!q) return;
     const results = document.getElementById("results");
     results.innerHTML = `<div class="results-loading">buscando...</div>`;
-    // Tenta múltiplos servidores Invidious caso um falhe
-    const servers = [
-      "https://inv.nadeko.net",
-      "https://invidious.nerdvpn.de",
-      "https://invidious.privacydev.net"
-    ];
-    let data = null;
-    for (const server of servers) {
-      try {
-        const res = await fetch(`${server}/api/v1/search?q=${encodeURIComponent(q)}&type=video&fields=videoId,title,author,videoThumbnails`, { signal: AbortSignal.timeout(5000) });
-        if (res.ok) { data = await res.json(); break; }
-      } catch(e) { continue; }
+    try {
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${YT_KEY}`);
+      const data = await res.json();
+      if (!data.items || !data.items.length) {
+        results.innerHTML=`<div class="results-empty">nenhum resultado encontrado</div>`;
+        return;
+      }
+      results.innerHTML = "";
+      data.items.forEach(v => {
+        const videoId = v.id.videoId;
+        const title = v.snippet.title||"";
+        const channel = v.snippet.channelTitle||"";
+        const thumbUrl = v.snippet.thumbnails?.medium?.url || v.snippet.thumbnails?.default?.url || "";
+        const safeTitle = escHtml(title);
+        const safeChannel = escHtml(channel);
+        const safeTitleJs = title.replace(/'/g,"\\'").replace(/"/g,"&quot;");
+        const item = document.createElement("div");
+        item.className = "result-item";
+        item.innerHTML = `
+          <img class="result-thumb" src="${thumbUrl}" onerror="this.style.display='none'" loading="lazy">
+          <div class="result-info">
+            <div class="result-title">${safeTitle}</div>
+            <div class="result-channel">${safeChannel}</div>
+          </div>
+          <button class="result-send" onclick="handleSend(this,'${videoId}','${safeTitleJs}','${thumbUrl}')">enviar</button>
+        `;
+        results.appendChild(item);
+      });
+    } catch(e) {
+      results.innerHTML=`<div class="results-empty">erro na busca — verifique conexão</div>`;
     }
-    if (!data || !data.length) {
-      results.innerHTML=`<div class="results-empty">nenhum resultado — tente outro servidor ou termo</div>`;
-      return;
-    }
-    results.innerHTML = "";
-    data.slice(0,8).forEach(v => {
-      const thumbArr = v.videoThumbnails||[];
-      const thumb = thumbArr.find(t=>t.quality==="medium")||thumbArr[0];
-      const thumbUrl = thumb?.url||"";
-      const safeTitle = escHtml(v.title||"");
-      const safeAuthor = escHtml(v.author||"");
-      const safeTitleJs = (v.title||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");
-      const item = document.createElement("div");
-      item.className = "result-item";
-      item.innerHTML = `
-        <img class="result-thumb" src="${thumbUrl}" onerror="this.style.display='none'" loading="lazy">
-        <div class="result-info">
-          <div class="result-title">${safeTitle}</div>
-          <div class="result-channel">${safeAuthor}</div>
-        </div>
-        <button class="result-send" onclick="handleSend(this,'${v.videoId}','${safeTitleJs}','${thumbUrl}')">enviar</button>
-      `;
-      results.appendChild(item);
-    });
   };
 
   window.handleSend = function(btn, videoId, title, thumb) {
