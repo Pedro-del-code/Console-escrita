@@ -7,241 +7,103 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0d14;
-    --surface: #12121e;
-    --text: #e8dff5;
-    --text-dim: #7a6f90;
-    --accent: #9b6dbd;
-    --pulse: #d4b0f0;
-    --sent: #16141f;
+    --bg:#0d0d14;--surface:#12121e;--text:#e8dff5;
+    --text-dim:#7a6f90;--accent:#9b6dbd;--pulse:#d4b0f0;--sent:#16141f;
   }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;overflow:hidden;}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+  .star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite ease-in-out alternate;}
+  @keyframes twinkle{from{opacity:var(--o1,.1);transform:scale(1)}to{opacity:var(--o2,.5);transform:scale(1.3)}}
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:.15;}
+  .orb1{width:400px;height:400px;background:#6a3fa0;top:-120px;left:-100px;animation:drift1 18s infinite ease-in-out alternate;}
+  .orb2{width:350px;height:350px;background:#3f3560;bottom:-80px;right:-80px;animation:drift2 22s infinite ease-in-out alternate;}
+  @keyframes drift1{from{transform:translate(0,0)}to{transform:translate(30px,20px)}}
+  @keyframes drift2{from{transform:translate(0,0)}to{transform:translate(-20px,-15px)}}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  .app{position:relative;z-index:1;height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:680px;margin:0 auto;}
 
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Cormorant Garamond', serif;
-    overflow: hidden;
-  }
+  .header{padding:20px 24px 14px;text-align:center;border-bottom:1px solid rgba(155,109,189,.12);flex-shrink:0;opacity:0;animation:fadeUp .8s .2s forwards;}
+  .header-eyebrow{font-family:'Raleway',sans-serif;font-weight:200;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;}
+  .header-title{font-size:1.5rem;font-weight:300;font-style:italic;color:var(--pulse);text-shadow:0 0 30px rgba(200,160,228,.35);}
+  .status{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:'Raleway',sans-serif;font-size:.58rem;font-weight:200;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:#4caf79;box-shadow:0 0 6px #4caf79;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .star {
-    position: absolute; border-radius: 50%; background: white;
-    animation: twinkle var(--d, 3s) infinite ease-in-out alternate;
-  }
-  @keyframes twinkle {
-    from { opacity: var(--o1, 0.1); transform: scale(1); }
-    to   { opacity: var(--o2, 0.5); transform: scale(1.3); }
-  }
+  .tabs{display:flex;flex-shrink:0;border-bottom:1px solid rgba(155,109,189,.12);opacity:0;animation:fadeUp .8s .3s forwards;}
+  .tab{flex:1;padding:10px;font-family:'Raleway',sans-serif;font-size:.6rem;font-weight:200;letter-spacing:.25em;text-transform:uppercase;color:var(--text-dim);background:none;border:none;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;}
+  .tab.active{color:var(--pulse);border-bottom-color:var(--accent);}
 
-  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; opacity: 0.15; }
-  .orb1 { width: 400px; height: 400px; background: #6a3fa0; top: -120px; left: -100px; animation: drift1 18s infinite ease-in-out alternate; }
-  .orb2 { width: 350px; height: 350px; background: #3f3560; bottom: -80px; right: -80px; animation: drift2 22s infinite ease-in-out alternate; }
-  @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(30px,20px)} }
-  @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-20px,-15px)} }
+  .panel{display:none;flex:1;flex-direction:column;overflow:hidden;}
+  .panel.active{display:flex;}
 
-  .app {
-    position: relative; z-index: 1;
-    height: 100vh; height: 100dvh;
-    display: flex; flex-direction: column;
-    max-width: 680px; margin: 0 auto;
-  }
+  /* Music */
+  .music-search-wrap{flex-shrink:0;padding:12px 20px;border-bottom:1px solid rgba(155,109,189,.08);}
+  .music-search-row{display:flex;gap:8px;}
+  .music-input{flex:1;background:rgba(155,109,189,.06);border:1px solid rgba(155,109,189,.2);border-radius:2px;padding:10px 14px;color:var(--text);font-family:'Raleway',sans-serif;font-size:.75rem;font-weight:200;outline:none;transition:border-color .3s;-webkit-appearance:none;}
+  .music-input:focus{border-color:rgba(155,109,189,.45);}
+  .music-input::placeholder{color:var(--text-dim);}
+  .search-btn{padding:10px 16px;background:rgba(155,109,189,.1);border:1px solid rgba(155,109,189,.25);border-radius:2px;color:var(--pulse);font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;-webkit-appearance:none;}
+  .search-btn:active{background:rgba(155,109,189,.2);}
 
-  .header {
-    padding: 28px 24px 18px;
-    text-align: center;
-    border-bottom: 1px solid rgba(155,109,189,0.12);
-    flex-shrink: 0;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s forwards;
-  }
-  .header-eyebrow {
-    font-family: 'Raleway', sans-serif; font-weight: 200;
-    font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
-    color: var(--text-dim); margin-bottom: 6px;
-  }
-  .header-title {
-    font-size: 1.7rem; font-weight: 300; font-style: italic;
-    color: var(--pulse); text-shadow: 0 0 30px rgba(200,160,228,0.35);
-  }
-  .status {
-    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
-    font-family: 'Raleway', sans-serif; font-size: 0.58rem; font-weight: 200;
-    letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-dim);
-  }
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #4caf79; box-shadow: 0 0 6px #4caf79;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .now-playing-bar{display:none;align-items:center;gap:10px;padding:8px 20px;background:rgba(155,109,189,.06);border-bottom:1px solid rgba(155,109,189,.08);}
+  .now-playing-bar.visible{display:flex;}
+  .np-thumb{width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0;}
+  .np-info{flex:1;min-width:0;}
+  .np-title{font-size:.8rem;font-weight:300;color:var(--pulse);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .np-sub{font-family:'Raleway',sans-serif;font-size:.55rem;font-weight:200;color:var(--text-dim);letter-spacing:.1em;}
+  .np-stop{background:none;border:none;color:var(--text-dim);font-size:.9rem;cursor:pointer;padding:4px;transition:color .2s;flex-shrink:0;}
+  .np-stop:active{color:#c0604a;}
 
-  /* Music Control Panel */
-  .music-panel {
-    flex-shrink: 0;
-    padding: 12px 24px;
-    border-bottom: 1px solid rgba(155,109,189,0.08);
-    background: rgba(13,13,20,0.6);
-    opacity: 0;
-    animation: fadeUp 0.8s 0.35s forwards;
-  }
-  .music-panel-label {
-    font-family: 'Raleway', sans-serif; font-weight: 200;
-    font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase;
-    color: var(--text-dim); margin-bottom: 10px;
-  }
-  .music-controls {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-  .music-track-btn {
-    padding: 7px 14px;
-    background: rgba(155,109,189,0.06);
-    border: 1px solid rgba(155,109,189,0.2);
-    border-radius: 2px;
-    color: var(--text-dim);
-    font-family: 'Raleway', sans-serif; font-size: 0.6rem;
-    font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase;
-    cursor: pointer; transition: all 0.25s;
-    -webkit-appearance: none;
-  }
-  .music-track-btn:active,
-  .music-track-btn.active {
-    background: rgba(155,109,189,0.18);
-    border-color: rgba(212,176,240,0.5);
-    color: var(--pulse);
-  }
-  .music-pause-btn {
-    padding: 7px 14px;
-    background: rgba(155,109,189,0.06);
-    border: 1px solid rgba(155,109,189,0.2);
-    border-radius: 2px;
-    color: var(--text-dim);
-    font-family: 'Raleway', sans-serif; font-size: 0.6rem;
-    font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase;
-    cursor: pointer; transition: all 0.25s;
-    margin-left: auto;
-    -webkit-appearance: none;
-  }
-  .music-pause-btn:active { background: rgba(155,109,189,0.12); color: var(--pulse); }
+  .results{flex:1;overflow-y:auto;padding:8px 12px;}
+  .result-item{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:4px;cursor:pointer;transition:background .2s;margin-bottom:2px;}
+  .result-item:active{background:rgba(155,109,189,.1);}
+  .result-thumb{width:52px;height:38px;object-fit:cover;border-radius:3px;flex-shrink:0;}
+  .result-info{flex:1;min-width:0;}
+  .result-title{font-size:.9rem;font-weight:300;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .result-channel{font-family:'Raleway',sans-serif;font-size:.55rem;font-weight:200;color:var(--text-dim);letter-spacing:.1em;margin-top:3px;}
+  .result-send{background:none;border:1px solid rgba(155,109,189,.2);border-radius:2px;color:var(--text-dim);font-size:.6rem;padding:5px 8px;cursor:pointer;transition:all .2s;flex-shrink:0;font-family:'Raleway',sans-serif;letter-spacing:.1em;}
+  .result-send:active,.result-send.sent{background:rgba(155,109,189,.15);color:var(--pulse);}
+  .results-empty{padding:32px 0;text-align:center;font-style:italic;color:var(--text-dim);font-size:.95rem;}
+  .results-loading{padding:24px 0;text-align:center;font-family:'Raleway',sans-serif;font-size:.6rem;letter-spacing:.3em;color:var(--text-dim);text-transform:uppercase;}
 
-  /* History */
-  .history {
-    flex: 1; overflow-y: auto;
-    padding: 18px 24px 8px;
-    display: flex; flex-direction: column;
-    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
-  }
-  .history-label {
-    font-family: 'Raleway', sans-serif; font-weight: 200;
-    font-size: 0.58rem; letter-spacing: 0.35em; text-transform: uppercase;
-    color: var(--text-dim); margin-bottom: 12px; flex-shrink: 0;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .clear-btn {
-    background: none; border: none; color: var(--text-dim);
-    font-family: 'Raleway', sans-serif; font-size: 0.55rem;
-    letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer;
-    transition: color 0.2s; padding: 4px 0;
-  }
-  .clear-btn:active { color: #c0604a; }
+  /* Messages */
+  .replies-section{flex-shrink:0;padding:10px 20px 6px;border-bottom:1px solid rgba(155,109,189,.08);}
+  .replies-label{font-family:'Raleway',sans-serif;font-weight:200;font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+  .replies-list{display:flex;flex-direction:column;gap:6px;max-height:110px;overflow-y:auto;}
+  .reply-item{padding:8px 12px;background:rgba(212,176,240,.06);border-left:2px solid rgba(212,176,240,.3);border-radius:3px;}
+  .reply-time{font-family:'Raleway',sans-serif;font-size:.52rem;color:var(--text-dim);margin-bottom:3px;}
+  .reply-text{font-size:.9rem;font-weight:300;color:#d4b0f0;}
+  .replies-empty{font-size:.85rem;font-style:italic;color:var(--text-dim);padding:4px 0;}
 
-  .history-items { display: flex; flex-direction: column; gap: 2px; }
+  .history{flex:1;overflow-y:auto;padding:12px 20px 8px;display:flex;flex-direction:column;}
+  .history-label{font-family:'Raleway',sans-serif;font-weight:200;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+  .clear-btn{background:none;border:none;color:var(--text-dim);font-family:'Raleway',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:4px 0;}
+  .clear-btn:active{color:#c0604a;}
+  .history-items{display:flex;flex-direction:column;gap:2px;}
+  .history-item{padding:10px 14px;background:var(--sent);border-left:2px solid rgba(155,109,189,.15);animation:fadeUp .3s forwards;}
+  .history-time{font-family:'Raleway',sans-serif;font-size:.52rem;font-weight:200;letter-spacing:.2em;color:var(--text-dim);margin-bottom:4px;display:flex;justify-content:space-between;}
+  .delete-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.6rem;transition:color .2s;padding:0 2px;}
+  .delete-btn:active{color:#c0604a;}
+  .history-text{font-size:.9rem;font-weight:300;line-height:1.6;color:#a890c8;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .history-empty{font-size:.95rem;font-style:italic;font-weight:300;color:var(--text-dim);text-align:center;padding:24px 0;line-height:1.7;}
 
-  .history-item {
-    padding: 12px 16px; background: var(--sent);
-    border-left: 2px solid rgba(155,109,189,0.15);
-    animation: fadeUp 0.3s forwards;
-  }
-  .history-time {
-    font-family: 'Raleway', sans-serif; font-size: 0.55rem; font-weight: 200;
-    letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 5px;
-    display: flex; justify-content: space-between;
-  }
-  .delete-btn {
-    background: none; border: none; color: var(--text-dim);
-    cursor: pointer; font-size: 0.6rem; transition: color 0.2s; padding: 0 2px;
-  }
-  .delete-btn:active { color: #c0604a; }
-  .history-text {
-    font-size: 0.95rem; font-weight: 300; line-height: 1.6; color: #a890c8;
-    white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .history-empty {
-    font-size: 1rem; font-style: italic; font-weight: 300;
-    color: var(--text-dim); text-align: center; padding: 32px 0; line-height: 1.7;
-  }
+  .compose{flex-shrink:0;border-top:1px solid rgba(155,109,189,.12);padding:14px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;background:rgba(13,13,20,.97);backdrop-filter:blur(12px);opacity:0;animation:fadeUp .8s .5s forwards;}
+  .compose-label{font-family:'Raleway',sans-serif;font-weight:200;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);}
+  textarea{width:100%;min-height:72px;max-height:130px;background:rgba(155,109,189,.06);border:1px solid rgba(155,109,189,.18);border-radius:2px;padding:12px 14px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;line-height:1.7;resize:none;outline:none;transition:border-color .3s;-webkit-appearance:none;}
+  textarea:focus{border-color:rgba(155,109,189,.45);}
+  textarea::placeholder{color:var(--text-dim);font-style:italic;}
+  .compose-row{display:flex;align-items:center;gap:12px;}
+  .char-count{font-family:'Raleway',sans-serif;font-size:.58rem;font-weight:200;color:var(--text-dim);letter-spacing:.1em;flex-shrink:0;}
+  .send-btn{flex:1;padding:12px 20px;background:transparent;border:1px solid rgba(155,109,189,.35);border-radius:2px;color:var(--pulse);font-family:'Raleway',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none;}
+  .send-btn:active{background:rgba(155,109,189,.12);transform:scale(.98);}
+  .send-btn.sending{opacity:.4;pointer-events:none;}
 
-  /* Compose */
-  .compose {
-    flex-shrink: 0;
-    border-top: 1px solid rgba(155,109,189,0.12);
-    padding: 16px 24px env(safe-area-inset-bottom, 24px);
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
-    display: flex; flex-direction: column; gap: 12px;
-    background: rgba(13,13,20,0.97);
-    backdrop-filter: blur(12px);
-    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
-  }
-  .compose-label {
-    font-family: 'Raleway', sans-serif; font-weight: 200;
-    font-size: 0.58rem; letter-spacing: 0.35em; text-transform: uppercase;
-    color: var(--text-dim);
-  }
-  textarea {
-    width: 100%; min-height: 88px; max-height: 150px;
-    background: rgba(155,109,189,0.06);
-    border: 1px solid rgba(155,109,189,0.18); border-radius: 2px;
-    padding: 14px 16px; color: var(--text);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem; font-weight: 300; line-height: 1.7;
-    resize: none; outline: none; transition: border-color 0.3s;
-    -webkit-appearance: none;
-  }
-  textarea:focus { border-color: rgba(155,109,189,0.45); }
-  textarea::placeholder { color: var(--text-dim); font-style: italic; }
+  .notif{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-60px);padding:10px 20px;background:rgba(18,18,30,.95);border:1px solid rgba(155,109,189,.3);font-family:'Raleway',sans-serif;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--pulse);transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:20;white-space:nowrap;backdrop-filter:blur(12px);}
+  .notif.show{transform:translateX(-50%) translateY(0);}
 
-  .compose-row { display: flex; align-items: center; gap: 12px; }
-  .char-count {
-    font-family: 'Raleway', sans-serif; font-size: 0.58rem; font-weight: 200;
-    color: var(--text-dim); letter-spacing: 0.1em; flex-shrink: 0;
-  }
-  .send-btn {
-    flex: 1; padding: 14px 20px; background: transparent;
-    border: 1px solid rgba(155,109,189,0.35); border-radius: 2px;
-    color: var(--pulse); font-family: 'Raleway', sans-serif; font-weight: 300;
-    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
-    cursor: pointer; transition: all 0.3s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    -webkit-appearance: none;
-  }
-  .send-btn:active { background: rgba(155,109,189,0.12); transform: scale(0.98); }
-  .send-btn.sending { opacity: 0.4; pointer-events: none; }
-
-  /* Notification */
-  .notif {
-    position: fixed; top: 20px; left: 50%;
-    transform: translateX(-50%) translateY(-60px);
-    padding: 10px 20px; background: rgba(18,18,30,0.95);
-    border: 1px solid rgba(155,109,189,0.3);
-    font-family: 'Raleway', sans-serif; font-size: 0.62rem;
-    letter-spacing: 0.25em; text-transform: uppercase; color: var(--pulse);
-    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-    pointer-events: none; z-index: 20; white-space: nowrap;
-    backdrop-filter: blur(12px);
-  }
-  .notif.show { transform: translateX(-50%) translateY(0); }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(155,109,189,0.25); border-radius: 2px; }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(155,109,189,.25);border-radius:2px}
 </style>
 </head>
 <body>
@@ -257,24 +119,46 @@
     <div class="status"><div class="status-dot"></div><span>ao vivo</span></div>
   </div>
 
-  <!-- Music Control Panel -->
-  <div class="music-panel">
-    <div class="music-panel-label">🎵 trilha sonora dela</div>
-    <div class="music-controls">
-      <button class="music-track-btn" id="track1Btn" onclick="sendMusic(1)">From The Start</button>
-      <button class="music-track-btn" id="track2Btn" onclick="sendMusic(2)">Daisy Bell</button>
-      <button class="music-track-btn" id="track3Btn" onclick="sendMusic(3)">Nanami Kento</button>
-      <button class="music-pause-btn" onclick="sendMusic(0)">⏸ pausar</button>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('music')">🎵 música</button>
+    <button class="tab" onclick="switchTab('messages')" id="msgTab">✦ mensagens</button>
+  </div>
+
+  <div class="panel active" id="musicPanel">
+    <div class="music-search-wrap">
+      <div class="music-search-row">
+        <input class="music-input" id="musicSearch" placeholder="buscar música no YouTube..." type="text" onkeydown="if(event.key==='Enter')searchMusic()">
+        <button class="search-btn" onclick="searchMusic()">buscar</button>
+      </div>
+    </div>
+    <div class="now-playing-bar" id="nowPlayingBar">
+      <img class="np-thumb" id="npThumb" src="" alt="">
+      <div class="np-info">
+        <div class="np-title" id="npTitle"></div>
+        <div class="np-sub">tocando agora ♪</div>
+      </div>
+      <button class="np-stop" onclick="stopMusic()">⏹</button>
+    </div>
+    <div class="results" id="results">
+      <div class="results-empty">pesquise uma música para enviar...</div>
     </div>
   </div>
 
-  <div class="history">
-    <div class="history-label">
-      <span>enviadas</span>
-      <button class="clear-btn" onclick="confirmClear()">limpar tudo</button>
+  <div class="panel" id="messagesPanel">
+    <div class="replies-section">
+      <div class="replies-label">respostas dela</div>
+      <div class="replies-list" id="repliesList">
+        <div class="replies-empty">nenhuma resposta ainda...</div>
+      </div>
     </div>
-    <div class="history-items" id="historyItems">
-      <div class="history-empty" id="historyEmpty">nenhuma mensagem ainda...</div>
+    <div class="history">
+      <div class="history-label">
+        <span>enviadas</span>
+        <button class="clear-btn" onclick="confirmClear()">limpar tudo</button>
+      </div>
+      <div class="history-items" id="historyItems">
+        <div class="history-empty" id="historyEmpty">nenhuma mensagem ainda...</div>
+      </div>
     </div>
   </div>
 
@@ -311,13 +195,15 @@
   const msgsRef    = ref(db, "messages");
   const typingRef  = ref(db, "typing");
   const musicRef   = ref(db, "musicaAtual");
+  const repliesRef = ref(db, "replies");
 
   const historyItems = document.getElementById("historyItems");
+  const repliesList  = document.getElementById("repliesList");
   const input = document.getElementById("msgInput");
   let typingTimeout = null;
   const renderedIds = new Set();
+  const renderedReplies = new Set();
 
-  // Typing indicator
   input.addEventListener("input", () => {
     set(typingRef, { active: true });
     clearTimeout(typingTimeout);
@@ -325,7 +211,6 @@
     document.getElementById("charCount").textContent = input.value.length;
   });
 
-  // Send message
   window.sendMessage = async function() {
     const text = input.value.trim();
     if (!text) return;
@@ -343,46 +228,54 @@
   };
 
   input.addEventListener("keydown", e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); sendMessage(); }
+    if ((e.ctrlKey||e.metaKey) && e.key==="Enter") { e.preventDefault(); sendMessage(); }
   });
 
-  // Send music command
-  window.sendMusic = async function(trackNum) {
+  window.sendMusicToFirebase = async function(videoId, title, thumb) {
     try {
-      await set(musicRef, { track: trackNum, timestamp: Date.now() });
-      const labels = { 0: "⏸ pausado", 1: "🎵 From The Start", 2: "🎵 Daisy Bell", 3: "🎵 Nanami Kento" };
-      showNotif(labels[trackNum] || "🎵 música enviada");
-      // Update active button state
-      [1,2,3].forEach(n => {
-        const b = document.getElementById(`track${n}Btn`);
-        if (b) b.classList.toggle("active", n === trackNum);
-      });
-    } catch(e) { showNotif("erro ao trocar música"); }
+      await set(musicRef, { videoId, title, thumb, timestamp: Date.now() });
+      document.getElementById("npThumb").src = thumb;
+      document.getElementById("npTitle").textContent = title;
+      document.getElementById("nowPlayingBar").classList.add("visible");
+      showNotif("🎵 enviado para ela");
+    } catch(e) { showNotif("erro ao enviar música"); }
   };
 
-  // Sync active track button from Firebase (in case of reconnect)
-  onValue(musicRef, snap => {
-    const val = snap.val();
-    if (!val) return;
-    [1,2,3].forEach(n => {
-      const b = document.getElementById(`track${n}Btn`);
-      if (b) b.classList.toggle("active", n === val.track);
-    });
+  window.stopMusic = async function() {
+    await set(musicRef, { videoId: null, timestamp: Date.now() });
+    document.getElementById("nowPlayingBar").classList.remove("visible");
+    showNotif("⏹ música pausada");
+  };
+
+  // Replies from receiver
+  onChildAdded(repliesRef, snap => {
+    const id = snap.key; const msg = snap.val();
+    if (renderedReplies.has(id)) return;
+    renderedReplies.add(id);
+    const empty = repliesList.querySelector(".replies-empty");
+    if (empty) empty.remove();
+    const time = new Date(msg.timestamp).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    const item = document.createElement("div");
+    item.className = "reply-item";
+    item.innerHTML = `<div class="reply-time">${time}</div><div class="reply-text">${escapeHtml(msg.text)}</div>`;
+    repliesList.appendChild(item);
+    repliesList.scrollTop = repliesList.scrollHeight;
+    const tab = document.getElementById("msgTab");
+    if (!tab.classList.contains("active")) tab.textContent = "✦ mensagens 🔴";
+    showNotif("💬 ela respondeu!");
   });
 
-  // History
   onChildAdded(msgsRef, snap => {
     const id = snap.key; const msg = snap.val();
     if (renderedIds.has(id)) return;
     renderedIds.add(id);
     const emp = document.getElementById("historyEmpty");
     if (emp) emp.remove();
-    const time = new Date(msg.timestamp);
-    const timeStr = time.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+    const time = new Date(msg.timestamp).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
     const item = document.createElement("div");
     item.className = "history-item"; item.dataset.id = id;
-    item.innerHTML = `<div class="history-time"><span>${timeStr}</span><button class="delete-btn" data-id="${id}">✕</button></div><div class="history-text">${escapeHtml(msg.text)}</div>`;
-    item.querySelector(".delete-btn").addEventListener("click", () => remove(ref(db, "messages/" + id)));
+    item.innerHTML = `<div class="history-time"><span>${time}</span><button class="delete-btn" data-id="${id}">✕</button></div><div class="history-text">${escapeHtml(msg.text)}</div>`;
+    item.querySelector(".delete-btn").addEventListener("click", () => remove(ref(db, "messages/"+id)));
     historyItems.appendChild(item);
     historyItems.scrollTop = historyItems.scrollHeight;
   });
@@ -409,19 +302,85 @@
 
 <script>
   const starsEl = document.getElementById("stars");
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement("div"); s.className = "star";
-    const size = Math.random() * 2 + 0.5;
-    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*5}s;--o1:${0.05+Math.random()*0.15};--o2:${0.2+Math.random()*0.4};animation-delay:${Math.random()*6}s;`;
+  for (let i=0;i<60;i++) {
+    const s = document.createElement("div"); s.className="star";
+    const sz=Math.random()*2+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*5}s;--o1:${.05+Math.random()*.15};--o2:${.2+Math.random()*.4};animation-delay:${Math.random()*6}s;`;
     starsEl.appendChild(s);
   }
 
   function showNotif(msg) {
     const el = document.getElementById("notif");
-    el.textContent = msg; el.classList.add("show");
-    setTimeout(() => el.classList.remove("show"), 2000);
+    el.textContent=msg; el.classList.add("show");
+    setTimeout(()=>el.classList.remove("show"),2200);
   }
   window.showNotif = showNotif;
+
+  window.switchTab = function(tab) {
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    if (tab==="music") {
+      document.querySelectorAll(".tab")[0].classList.add("active");
+      document.getElementById("musicPanel").classList.add("active");
+    } else {
+      document.querySelectorAll(".tab")[1].classList.add("active");
+      document.getElementById("messagesPanel").classList.add("active");
+      document.getElementById("msgTab").textContent = "✦ mensagens";
+    }
+  };
+
+  // YouTube search via Invidious (sem API key)
+  window.searchMusic = async function() {
+    const q = document.getElementById("musicSearch").value.trim();
+    if (!q) return;
+    const results = document.getElementById("results");
+    results.innerHTML = `<div class="results-loading">buscando...</div>`;
+    // Tenta múltiplos servidores Invidious caso um falhe
+    const servers = [
+      "https://inv.nadeko.net",
+      "https://invidious.nerdvpn.de",
+      "https://invidious.privacydev.net"
+    ];
+    let data = null;
+    for (const server of servers) {
+      try {
+        const res = await fetch(`${server}/api/v1/search?q=${encodeURIComponent(q)}&type=video&fields=videoId,title,author,videoThumbnails`, { signal: AbortSignal.timeout(5000) });
+        if (res.ok) { data = await res.json(); break; }
+      } catch(e) { continue; }
+    }
+    if (!data || !data.length) {
+      results.innerHTML=`<div class="results-empty">nenhum resultado — tente outro servidor ou termo</div>`;
+      return;
+    }
+    results.innerHTML = "";
+    data.slice(0,8).forEach(v => {
+      const thumbArr = v.videoThumbnails||[];
+      const thumb = thumbArr.find(t=>t.quality==="medium")||thumbArr[0];
+      const thumbUrl = thumb?.url||"";
+      const safeTitle = escHtml(v.title||"");
+      const safeAuthor = escHtml(v.author||"");
+      const safeTitleJs = (v.title||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");
+      const item = document.createElement("div");
+      item.className = "result-item";
+      item.innerHTML = `
+        <img class="result-thumb" src="${thumbUrl}" onerror="this.style.display='none'" loading="lazy">
+        <div class="result-info">
+          <div class="result-title">${safeTitle}</div>
+          <div class="result-channel">${safeAuthor}</div>
+        </div>
+        <button class="result-send" onclick="handleSend(this,'${v.videoId}','${safeTitleJs}','${thumbUrl}')">enviar</button>
+      `;
+      results.appendChild(item);
+    });
+  };
+
+  window.handleSend = function(btn, videoId, title, thumb) {
+    btn.textContent = "✦";
+    btn.classList.add("sent");
+    sendMusicToFirebase(videoId, title, thumb);
+  };
+
+  function escHtml(t) { return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 </script>
 </body>
 </html>
