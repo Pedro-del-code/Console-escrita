@@ -329,36 +329,31 @@
     3: document.getElementById("track3"),
   };
   const trackNames = { 0: "⏸ música pausada", 1: "🎵 From The Start — Laufey", 2: "🎵 Daisy Bell — Abstraction Jax", 3: "🎵 Nanami Kento — JJK Piano" };
-  let currentTrack = null;
-  let soundUnlocked = false;
-  let pendingTrack = null;
+  window._currentTrack = null;
+  window._soundUnlocked = false;
+  window._pendingTrack = null;
 
   window.__applyTrack = function(trackNum) {
-    if (!soundUnlocked) { pendingTrack = trackNum; return; }
-    // Stop all
+    if (!window._soundUnlocked) { window._pendingTrack = trackNum; return; }
     Object.values(tracks).forEach(t => { t.pause(); t.currentTime = 0; });
     const btn = document.getElementById("musicBtn");
     if (trackNum === 0 || !tracks[trackNum]) {
-      currentTrack = null;
+      window._currentTrack = null;
       btn.classList.remove("playing");
       document.getElementById("musicIcon").textContent = "♪";
     } else {
       tracks[trackNum].play().then(() => {
-        currentTrack = trackNum;
+        window._currentTrack = trackNum;
         btn.classList.add("playing");
         document.getElementById("musicIcon").textContent = "♫";
-      }).catch(() => { pendingTrack = trackNum; });
+      }).catch(() => { window._pendingTrack = trackNum; });
     }
     showMusicToast(trackNames[trackNum] || "🎵 música");
   };
 
-  let lastMusicTimestamp = 0;
   onValue(musicRef, snap => {
     const val = snap.val();
     if (!val) return;
-    // Ignore old values on first load
-    if (val.timestamp && val.timestamp <= lastMusicTimestamp) return;
-    lastMusicTimestamp = val.timestamp || 0;
     window.__applyTrack(val.track);
   });
 
@@ -466,11 +461,10 @@
     const gate = document.getElementById("soundGate");
     gate.classList.add("hidden");
     setTimeout(() => { gate.style.display = "none"; }, 500);
-    window.soundUnlocked = true;
-    // Apply any pending track
-    if (window.pendingTrack !== null && window.pendingTrack !== undefined) {
-      window.__applyTrack(window.pendingTrack);
-      window.pendingTrack = null;
+    window._soundUnlocked = true;
+    if (window._pendingTrack !== null && window._pendingTrack !== undefined) {
+      window.__applyTrack(window._pendingTrack);
+      window._pendingTrack = null;
     }
   };
 
@@ -488,22 +482,21 @@
   const musicIcon = document.getElementById("musicIcon");
 
   function toggleMusic() {
-    if (!window.soundUnlocked) return;
+    if (!window._soundUnlocked) return;
     const tracks = {
       1: document.getElementById("track1"),
       2: document.getElementById("track2"),
       3: document.getElementById("track3"),
     };
-    if (window.currentTrack && tracks[window.currentTrack]) {
-      tracks[window.currentTrack].pause();
-      window.currentTrack = null;
+    if (window._currentTrack && tracks[window._currentTrack]) {
+      tracks[window._currentTrack].pause();
+      window._currentTrack = null;
       musicBtn.classList.remove("playing");
       musicIcon.textContent = "♪";
     } else {
-      // Resume last or track 1
       const t = tracks[1];
       t.play().then(() => {
-        window.currentTrack = 1;
+        window._currentTrack = 1;
         musicBtn.classList.add("playing");
         musicIcon.textContent = "♫";
       });
