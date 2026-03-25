@@ -280,18 +280,18 @@
 
 <!-- Audio tracks -->
 <audio id="track1" loop>
-  <source src="Good_Kid_-_From_The_Start__Laufey_Cover_.mp3" type="audio/mpeg">
+  <source src="track1.mp3" type="audio/mpeg">
 </audio>
 <audio id="track2" loop>
-  <source src="DAISY_BELL__Abstraction_Jax__-__Ft. @MilkintheMicrowaver.mp3" type="audio/mpeg">
+  <source src="track2.mp3" type="audio/mpeg">
 </audio>
 <audio id="track3" loop>
-  <source src="Nanami_Kento_-_Jujutsu_Kaisen_Season_2_Episode_18_Piano_Cover.mp3" type="audio/mpeg">
+  <source src="track3.mp3" type="audio/mpeg">
 </audio>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, onValue, onChildAdded, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, onValue, onChildAdded, onChildRemoved, query, orderByChild, remove, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAPJumCm22O2efBsou0_HjMb2F8mk9ndUE",
@@ -371,6 +371,23 @@
     if (renderedIds.has(id)) return;
     renderedIds.add(id);
     renderMessage(msg, id, !isFirstLoad);
+
+    // Auto-delete oldest if more than 3
+    get(ref(db, "messages")).then(snapshot => {
+      if (!snapshot.exists()) return;
+      const all = [];
+      snapshot.forEach(child => all.push({ key: child.key, ts: child.val().timestamp }));
+      if (all.length > 3) {
+        all.sort((a, b) => a.ts - b.ts);
+        remove(ref(db, "messages/" + all[0].key));
+      }
+    });
+  });
+
+  onChildRemoved(ref(db, "messages"), snap => {
+    const el = messagesArea.querySelector(`[data-id="${snap.key}"]`);
+    if (el) { el.style.opacity = "0"; el.style.transition = "opacity 0.4s"; setTimeout(() => el.remove(), 400); }
+    renderedIds.delete(snap.key);
   });
 
   setTimeout(() => { isFirstLoad = false; }, 1500);
