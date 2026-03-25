@@ -27,17 +27,9 @@
     cursor: default;
   }
 
-  /* Starfield background */
-  .stars {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .star {
-    position: absolute;
-    border-radius: 50%;
-    background: white;
+    position: absolute; border-radius: 50%; background: white;
     animation: twinkle var(--d, 3s) infinite ease-in-out alternate;
   }
   @keyframes twinkle {
@@ -45,15 +37,7 @@
     to   { opacity: var(--o2, 0.6); transform: scale(1.3); }
   }
 
-  /* Ambient glow orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.18;
-  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; opacity: 0.18; }
   .orb1 { width: 500px; height: 500px; background: #6a3fa0; top: -100px; left: -100px; animation: drift1 18s infinite ease-in-out alternate; }
   .orb2 { width: 400px; height: 400px; background: #3f3560; bottom: -80px; right: -80px; animation: drift2 22s infinite ease-in-out alternate; }
   .orb3 { width: 300px; height: 300px; background: #7050a0; top: 40%; left: 40%; animation: drift1 15s infinite ease-in-out alternate-reverse; }
@@ -61,121 +45,96 @@
   @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(40px, 30px) scale(1.15); } }
   @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px, -20px) scale(1.1); } }
 
-  /* Layout */
   .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 680px;
-    margin: 0 auto;
+    position: relative; z-index: 1;
+    max-width: 680px; margin: 0 auto;
     padding: 60px 32px 120px;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
   }
 
-  /* Header */
   .header {
-    text-align: center;
-    margin-bottom: 56px;
-    opacity: 0;
-    animation: fadeUp 1.2s 0.3s forwards;
+    text-align: center; margin-bottom: 56px;
+    opacity: 0; animation: fadeUp 1.2s 0.3s forwards;
   }
   .header-eyebrow {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 200;
-    font-size: 0.7rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 12px;
+    font-family: 'Raleway', sans-serif; font-weight: 200;
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 12px;
   }
   .header-title {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 300;
-    font-style: italic;
-    color: var(--pulse);
-    letter-spacing: 0.02em;
+    font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 300; font-style: italic;
+    color: var(--pulse); letter-spacing: 0.02em;
     text-shadow: 0 0 40px rgba(200,160,228,0.4);
   }
   .divider {
-    margin: 20px auto 0;
-    width: 60px;
-    height: 1px;
+    margin: 20px auto 0; width: 60px; height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
   }
 
-  /* Messages area */
+  /* Messages area - improved */
   .messages-area {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
+    padding: 4px 0 20px;
+    display: flex; flex-direction: column;
     gap: 0;
+    scroll-behavior: smooth;
   }
 
   .message-entry {
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeUp 0.8s forwards;
-    padding: 28px 0;
-    border-bottom: 1px solid rgba(155,109,189,0.1);
+    animation: fadeIn 0.5s ease forwards;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 3px solid #9b87f5;
+    border-radius: 8px;
     position: relative;
+    transition: background 0.3s;
   }
-  .message-entry:last-child { border-bottom: none; }
+  .message-entry:hover { background: rgba(255,255,255,0.06); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
   .message-meta {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 200;
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 12px;
+    font-family: 'Raleway', sans-serif; font-weight: 200;
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 12px;
   }
 
   .message-text {
     font-size: clamp(1.05rem, 2.5vw, 1.35rem);
-    line-height: 1.85;
-    font-weight: 300;
-    color: var(--text);
-    white-space: pre-wrap;
+    line-height: 1.85; font-weight: 300;
+    color: var(--text); white-space: pre-wrap;
   }
 
   .message-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.1em;
-    background: var(--pulse);
-    margin-left: 3px;
-    vertical-align: middle;
-    animation: blink 0.9s infinite;
+    display: inline-block; width: 2px; height: 1.1em;
+    background: var(--pulse); margin-left: 3px;
+    vertical-align: middle; animation: blink 0.9s infinite;
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
   /* Typing indicator */
   .typing-indicator {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 24px 0;
-    opacity: 0;
-    transition: opacity 0.4s;
+    display: none; align-items: center; gap: 10px;
+    padding: 20px 0; opacity: 0; transition: opacity 0.4s;
   }
   .typing-indicator.visible { display: flex; opacity: 1; }
   .typing-label {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 200;
-    font-size: 0.68rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-style: italic;
+    font-family: 'Raleway', sans-serif; font-weight: 200;
+    font-size: 0.68rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--accent); font-style: italic;
   }
   .typing-dots { display: flex; gap: 5px; }
   .typing-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: dotBounce 1.2s infinite ease-in-out;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); animation: dotBounce 1.2s infinite ease-in-out;
   }
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
@@ -184,57 +143,76 @@
     40% { transform: scale(1.2); opacity: 1; }
   }
 
+  /* Music notification toast */
+  .music-toast {
+    position: fixed; bottom: 80px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 8px 18px;
+    background: rgba(18,18,30,0.92);
+    border: 1px solid rgba(155,109,189,0.25);
+    border-radius: 20px;
+    font-family: 'Raleway', sans-serif; font-size: 0.62rem;
+    letter-spacing: 0.2em; color: var(--text-dim);
+    opacity: 0; transition: all 0.4s ease;
+    pointer-events: none; z-index: 20; white-space: nowrap;
+    backdrop-filter: blur(12px);
+  }
+  .music-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   /* Empty state */
   .empty-state {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 0;
-    opacity: 0;
-    animation: fadeUp 1.4s 0.8s forwards;
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 0;
+    opacity: 0; animation: fadeUp 1.4s 0.8s forwards;
   }
   .empty-icon { font-size: 2.5rem; margin-bottom: 20px; opacity: 0.3; }
   .empty-text {
-    font-size: 1.1rem;
-    font-style: italic;
-    font-weight: 300;
-    color: var(--text-dim);
-    line-height: 1.7;
-    max-width: 320px;
+    font-size: 1.1rem; font-style: italic; font-weight: 300;
+    color: var(--text-dim); line-height: 1.7; max-width: 320px;
   }
+
+  /* Activate sound button */
+  .sound-gate {
+    position: fixed; inset: 0; z-index: 30;
+    background: rgba(13,13,20,0.97);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px; text-align: center;
+    opacity: 1; transition: opacity 0.5s;
+  }
+  .sound-gate.hidden { opacity: 0; pointer-events: none; }
+  .sound-gate-title {
+    font-size: 1.6rem; font-weight: 300; font-style: italic;
+    color: var(--pulse); text-shadow: 0 0 30px rgba(200,160,228,0.3);
+  }
+  .sound-gate-sub {
+    font-family: 'Raleway', sans-serif; font-weight: 200;
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .sound-gate-btn {
+    margin-top: 12px; padding: 14px 36px;
+    background: transparent;
+    border: 1px solid rgba(155,109,189,0.4); border-radius: 2px;
+    color: var(--pulse); font-family: 'Raleway', sans-serif; font-weight: 300;
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .sound-gate-btn:active { background: rgba(155,109,189,0.12); }
 
   /* Music button */
   .music-btn {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 10;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+    position: fixed; bottom: 28px; right: 28px; z-index: 10;
+    width: 46px; height: 46px; border-radius: 50%;
     border: 1px solid rgba(155,109,189,0.35);
-    background: rgba(18,18,30,0.85);
-    backdrop-filter: blur(12px);
-    color: var(--text-dim);
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(18,18,30,0.85); backdrop-filter: blur(12px);
+    color: var(--text-dim); font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     transition: all 0.3s;
     box-shadow: 0 0 20px rgba(155,109,189,0.1);
   }
-  .music-btn:hover {
-    border-color: var(--accent);
-    color: var(--pulse);
-    box-shadow: 0 0 30px rgba(155,109,189,0.25);
-  }
   .music-btn.playing { color: var(--pulse); border-color: rgba(212,176,240,0.5); }
-
-  /* Vinyl animation when playing */
   .music-btn.playing .music-icon { animation: spin 4s linear infinite; display: inline-block; }
   @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
@@ -243,7 +221,14 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Scrollbar */
+  /* Responsive */
+  @media (max-width: 768px) {
+    .wrapper { padding: 40px 20px 100px; }
+    .messages-area { padding: 4px 0 16px; }
+    .message-entry { padding: 12px 14px; margin-bottom: 14px; }
+    .message-text { font-size: 1rem; }
+  }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(155,109,189,0.3); border-radius: 2px; }
@@ -251,10 +236,14 @@
 </head>
 <body>
 
-<!-- Stars -->
-<div class="stars" id="stars"></div>
+<!-- Sound activation gate -->
+<div class="sound-gate" id="soundGate">
+  <div class="sound-gate-title">Console da Alma</div>
+  <div class="sound-gate-sub">mensagens ao vivo</div>
+  <button class="sound-gate-btn" onclick="activateSound()">✦ entrar</button>
+</div>
 
-<!-- Ambient orbs -->
+<div class="stars" id="stars"></div>
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 <div class="orb orb3"></div>
@@ -283,27 +272,27 @@
   </div>
 </div>
 
-<!-- Music control -->
 <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Música">
   <span class="music-icon" id="musicIcon">♪</span>
 </button>
 
-<!-- Audio element — swap src for your MP3 or a hosted URL -->
-<audio id="bgMusic" loop>
-  <!-- Replace with your music URL or file path -->
-  <!-- Example: <source src="music/receiver.mp3" type="audio/mpeg"> -->
-  <!-- Using a free ambient piece as placeholder — replace as needed -->
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3" type="audio/mpeg">
+<div class="music-toast" id="musicToast"></div>
+
+<!-- Audio tracks -->
+<audio id="track1" loop>
+  <source src="Good_Kid_-_From_The_Start__Laufey_Cover_.mp3" type="audio/mpeg">
+</audio>
+<audio id="track2" loop>
+  <source src="DAISY_BELL__Abstraction_Jax__-__Ft. @MilkintheMicrowaver.mp3" type="audio/mpeg">
+</audio>
+<audio id="track3" loop>
+  <source src="Nanami_Kento_-_Jujutsu_Kaisen_Season_2_Episode_18_Piano_Cover.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, onValue, onChildAdded, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  // ============================================================
-  //  🔧 CONFIGURE YOUR FIREBASE PROJECT HERE
-  // ============================================================
   const firebaseConfig = {
     apiKey: "AIzaSyAPJumCm22O2efBsou0_HjMb2F8mk9ndUE",
     authDomain: "soul-23fc2.firebaseapp.com",
@@ -313,31 +302,67 @@
     messagingSenderId: "385202397060",
     appId: "1:385202397060:web:8faf55d3b6fdf74e23c7d1"
   };
-  // ============================================================
 
   const app = initializeApp(firebaseConfig);
   const db  = getDatabase(app);
 
-  const messagesArea   = document.getElementById("messagesArea");
-  const emptyState     = document.getElementById("emptyState");
+  const messagesArea    = document.getElementById("messagesArea");
+  const emptyState      = document.getElementById("emptyState");
   const typingIndicator = document.getElementById("typingIndicator");
 
   let messageCount = 0;
   let isFirstLoad  = true;
   const renderedIds = new Set();
 
-  // --- Typing indicator ---
+  // Typing indicator
   const typingRef = ref(db, "typing");
   onValue(typingRef, snap => {
     const val = snap.val();
-    if (val && val.active) {
-      typingIndicator.classList.add("visible");
-    } else {
-      typingIndicator.classList.remove("visible");
-    }
+    typingIndicator.classList.toggle("visible", !!(val && val.active));
   });
 
-  // --- Messages ---
+  // Music control listener
+  const musicRef = ref(db, "musicaAtual");
+  const tracks = {
+    1: document.getElementById("track1"),
+    2: document.getElementById("track2"),
+    3: document.getElementById("track3"),
+  };
+  const trackNames = { 0: "⏸ música pausada", 1: "🎵 From The Start — Laufey", 2: "🎵 Daisy Bell — Abstraction Jax", 3: "🎵 Nanami Kento — JJK Piano" };
+  let currentTrack = null;
+  let soundUnlocked = false;
+  let pendingTrack = null;
+
+  window.__applyTrack = function(trackNum) {
+    if (!soundUnlocked) { pendingTrack = trackNum; return; }
+    // Stop all
+    Object.values(tracks).forEach(t => { t.pause(); t.currentTime = 0; });
+    const btn = document.getElementById("musicBtn");
+    if (trackNum === 0 || !tracks[trackNum]) {
+      currentTrack = null;
+      btn.classList.remove("playing");
+      document.getElementById("musicIcon").textContent = "♪";
+    } else {
+      tracks[trackNum].play().then(() => {
+        currentTrack = trackNum;
+        btn.classList.add("playing");
+        document.getElementById("musicIcon").textContent = "♫";
+      }).catch(() => { pendingTrack = trackNum; });
+    }
+    showMusicToast(trackNames[trackNum] || "🎵 música");
+  };
+
+  let lastMusicTimestamp = 0;
+  onValue(musicRef, snap => {
+    const val = snap.val();
+    if (!val) return;
+    // Ignore old values on first load
+    if (val.timestamp && val.timestamp <= lastMusicTimestamp) return;
+    lastMusicTimestamp = val.timestamp || 0;
+    window.__applyTrack(val.track);
+  });
+
+  // Messages
   const msgsRef = query(ref(db, "messages"), orderByChild("timestamp"));
 
   onChildAdded(msgsRef, snap => {
@@ -345,19 +370,12 @@
     const msg = snap.val();
     if (renderedIds.has(id)) return;
     renderedIds.add(id);
-
-    if (isFirstLoad) {
-      renderMessage(msg, id, false);
-    } else {
-      renderMessage(msg, id, true);
-    }
+    renderMessage(msg, id, !isFirstLoad);
   });
 
-  // Mark first load complete after slight delay
   setTimeout(() => { isFirstLoad = false; }, 1500);
 
   function renderMessage(msg, id, animate) {
-    // Hide empty state
     if (emptyState.parentNode) {
       emptyState.style.opacity = "0";
       emptyState.style.transition = "opacity 0.5s";
@@ -382,8 +400,6 @@
 
     entry.appendChild(meta);
     entry.appendChild(textEl);
-
-    // Insert before typing indicator but if typing indicator not in messages area, just append
     messagesArea.appendChild(entry);
 
     if (animate) {
@@ -392,7 +408,6 @@
       textEl.textContent = msg.text;
     }
 
-    // Scroll to bottom
     setTimeout(() => {
       entry.scrollIntoView({ behavior: "smooth", block: "end" });
     }, 100);
@@ -402,10 +417,8 @@
     const cursor = document.createElement("span");
     cursor.className = "message-cursor";
     el.appendChild(cursor);
-
     let i = 0;
     const speed = Math.max(18, Math.min(40, 2000 / text.length));
-
     const interval = setInterval(() => {
       if (i < text.length) {
         el.insertBefore(document.createTextNode(text[i]), cursor);
@@ -422,50 +435,61 @@
 </script>
 
 <script>
-  // ---- Stars ----
+  // Stars
   const starsEl = document.getElementById("stars");
   for (let i = 0; i < 90; i++) {
-    const s = document.createElement("div");
-    s.className = "star";
+    const s = document.createElement("div"); s.className = "star";
     const size = Math.random() * 2 + 0.5;
-    s.style.cssText = `
-      width:${size}px; height:${size}px;
-      top:${Math.random()*100}%;
-      left:${Math.random()*100}%;
-      --d:${2+Math.random()*5}s;
-      --o1:${0.05+Math.random()*0.2};
-      --o2:${0.3+Math.random()*0.5};
-      animation-delay:${Math.random()*6}s;
-    `;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*5}s;--o1:${0.05+Math.random()*0.2};--o2:${0.3+Math.random()*0.5};animation-delay:${Math.random()*6}s;`;
     starsEl.appendChild(s);
   }
 
-  // ---- Music ----
-  const music   = document.getElementById("bgMusic");
-  const btn     = document.getElementById("musicBtn");
-  const icon    = document.getElementById("musicIcon");
-  let playing   = false;
+  // Sound gate
+  window.activateSound = function() {
+    const gate = document.getElementById("soundGate");
+    gate.classList.add("hidden");
+    setTimeout(() => { gate.style.display = "none"; }, 500);
+    window.soundUnlocked = true;
+    // Apply any pending track
+    if (window.pendingTrack !== null && window.pendingTrack !== undefined) {
+      window.__applyTrack(window.pendingTrack);
+      window.pendingTrack = null;
+    }
+  };
 
-  // Auto-play on first interaction
-  document.addEventListener("click", function tryPlay() {
-    if (!playing) { music.play().then(() => { playing = true; btn.classList.add("playing"); }); }
-    document.removeEventListener("click", tryPlay);
-  }, { once: true });
+  // Music toast
+  function showMusicToast(msg) {
+    const el = document.getElementById("musicToast");
+    el.textContent = msg;
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 2800);
+  }
+  window.showMusicToast = showMusicToast;
 
-  // Also try immediately
-  music.play().then(() => { playing = true; btn.classList.add("playing"); }).catch(() => {});
+  // Manual music toggle
+  const musicBtn = document.getElementById("musicBtn");
+  const musicIcon = document.getElementById("musicIcon");
 
   function toggleMusic() {
-    if (playing) {
-      music.pause();
-      playing = false;
-      btn.classList.remove("playing");
-      icon.textContent = "♪";
+    if (!window.soundUnlocked) return;
+    const tracks = {
+      1: document.getElementById("track1"),
+      2: document.getElementById("track2"),
+      3: document.getElementById("track3"),
+    };
+    if (window.currentTrack && tracks[window.currentTrack]) {
+      tracks[window.currentTrack].pause();
+      window.currentTrack = null;
+      musicBtn.classList.remove("playing");
+      musicIcon.textContent = "♪";
     } else {
-      music.play();
-      playing = true;
-      btn.classList.add("playing");
-      icon.textContent = "♫";
+      // Resume last or track 1
+      const t = tracks[1];
+      t.play().then(() => {
+        window.currentTrack = 1;
+        musicBtn.classList.add("playing");
+        musicIcon.textContent = "♫";
+      });
     }
   }
 </script>

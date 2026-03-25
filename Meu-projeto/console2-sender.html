@@ -26,7 +26,6 @@
     overflow: hidden;
   }
 
-  /* Stars */
   .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .star {
     position: absolute; border-radius: 50%; background: white;
@@ -37,14 +36,12 @@
     to   { opacity: var(--o2, 0.5); transform: scale(1.3); }
   }
 
-  /* Orbs */
   .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; opacity: 0.15; }
   .orb1 { width: 400px; height: 400px; background: #6a3fa0; top: -120px; left: -100px; animation: drift1 18s infinite ease-in-out alternate; }
   .orb2 { width: 350px; height: 350px; background: #3f3560; bottom: -80px; right: -80px; animation: drift2 22s infinite ease-in-out alternate; }
   @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(30px,20px)} }
   @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-20px,-15px)} }
 
-  /* Layout */
   .app {
     position: relative; z-index: 1;
     height: 100vh; height: 100dvh;
@@ -52,7 +49,6 @@
     max-width: 680px; margin: 0 auto;
   }
 
-  /* Header */
   .header {
     padding: 28px 24px 18px;
     text-align: center;
@@ -81,6 +77,54 @@
     animation: pulse 2s infinite;
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* Music Control Panel */
+  .music-panel {
+    flex-shrink: 0;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(155,109,189,0.08);
+    background: rgba(13,13,20,0.6);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .music-panel-label {
+    font-family: 'Raleway', sans-serif; font-weight: 200;
+    font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 10px;
+  }
+  .music-controls {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .music-track-btn {
+    padding: 7px 14px;
+    background: rgba(155,109,189,0.06);
+    border: 1px solid rgba(155,109,189,0.2);
+    border-radius: 2px;
+    color: var(--text-dim);
+    font-family: 'Raleway', sans-serif; font-size: 0.6rem;
+    font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.25s;
+    -webkit-appearance: none;
+  }
+  .music-track-btn:active,
+  .music-track-btn.active {
+    background: rgba(155,109,189,0.18);
+    border-color: rgba(212,176,240,0.5);
+    color: var(--pulse);
+  }
+  .music-pause-btn {
+    padding: 7px 14px;
+    background: rgba(155,109,189,0.06);
+    border: 1px solid rgba(155,109,189,0.2);
+    border-radius: 2px;
+    color: var(--text-dim);
+    font-family: 'Raleway', sans-serif; font-size: 0.6rem;
+    font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.25s;
+    margin-left: auto;
+    -webkit-appearance: none;
+  }
+  .music-pause-btn:active { background: rgba(155,109,189,0.12); color: var(--pulse); }
 
   /* History */
   .history {
@@ -190,18 +234,6 @@
   }
   .notif.show { transform: translateX(-50%) translateY(0); }
 
-  /* Music */
-  .music-btn {
-    position: fixed; bottom: 110px; right: 20px; z-index: 10;
-    width: 42px; height: 42px; border-radius: 50%;
-    border: 1px solid rgba(155,109,189,0.3);
-    background: rgba(13,13,20,0.85); backdrop-filter: blur(12px);
-    color: var(--text-dim); font-size: 1rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s;
-  }
-  .music-btn.playing { color: var(--pulse); border-color: rgba(212,176,240,0.45); }
-
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -223,6 +255,17 @@
     <div class="header-eyebrow">remetente</div>
     <div class="header-title">Console do Coração</div>
     <div class="status"><div class="status-dot"></div><span>ao vivo</span></div>
+  </div>
+
+  <!-- Music Control Panel -->
+  <div class="music-panel">
+    <div class="music-panel-label">🎵 trilha sonora dela</div>
+    <div class="music-controls">
+      <button class="music-track-btn" id="track1Btn" onclick="sendMusic(1)">From The Start</button>
+      <button class="music-track-btn" id="track2Btn" onclick="sendMusic(2)">Daisy Bell</button>
+      <button class="music-track-btn" id="track3Btn" onclick="sendMusic(3)">Nanami Kento</button>
+      <button class="music-pause-btn" onclick="sendMusic(0)">⏸ pausar</button>
+    </div>
   </div>
 
   <div class="history">
@@ -248,14 +291,10 @@
 </div>
 
 <div class="notif" id="notif"></div>
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()"><span id="musicIcon">♪</span></button>
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_5ff9f9c1d3.mp3" type="audio/mpeg">
-</audio>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, set, remove, onChildAdded, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, push, set, remove, onChildAdded, onChildRemoved, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAPJumCm22O2efBsou0_HjMb2F8mk9ndUE",
@@ -269,14 +308,16 @@
 
   const app = initializeApp(firebaseConfig);
   const db  = getDatabase(app);
-  const msgsRef   = ref(db, "messages");
-  const typingRef = ref(db, "typing");
+  const msgsRef    = ref(db, "messages");
+  const typingRef  = ref(db, "typing");
+  const musicRef   = ref(db, "musicaAtual");
 
   const historyItems = document.getElementById("historyItems");
   const input = document.getElementById("msgInput");
   let typingTimeout = null;
   const renderedIds = new Set();
 
+  // Typing indicator
   input.addEventListener("input", () => {
     set(typingRef, { active: true });
     clearTimeout(typingTimeout);
@@ -284,6 +325,7 @@
     document.getElementById("charCount").textContent = input.value.length;
   });
 
+  // Send message
   window.sendMessage = async function() {
     const text = input.value.trim();
     if (!text) return;
@@ -304,6 +346,31 @@
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); sendMessage(); }
   });
 
+  // Send music command
+  window.sendMusic = async function(trackNum) {
+    try {
+      await set(musicRef, { track: trackNum, timestamp: Date.now() });
+      const labels = { 0: "⏸ pausado", 1: "🎵 From The Start", 2: "🎵 Daisy Bell", 3: "🎵 Nanami Kento" };
+      showNotif(labels[trackNum] || "🎵 música enviada");
+      // Update active button state
+      [1,2,3].forEach(n => {
+        const b = document.getElementById(`track${n}Btn`);
+        if (b) b.classList.toggle("active", n === trackNum);
+      });
+    } catch(e) { showNotif("erro ao trocar música"); }
+  };
+
+  // Sync active track button from Firebase (in case of reconnect)
+  onValue(musicRef, snap => {
+    const val = snap.val();
+    if (!val) return;
+    [1,2,3].forEach(n => {
+      const b = document.getElementById(`track${n}Btn`);
+      if (b) b.classList.toggle("active", n === val.track);
+    });
+  });
+
+  // History
   onChildAdded(msgsRef, snap => {
     const id = snap.key; const msg = snap.val();
     if (renderedIds.has(id)) return;
@@ -355,21 +422,6 @@
     setTimeout(() => el.classList.remove("show"), 2000);
   }
   window.showNotif = showNotif;
-
-  const music = document.getElementById("bgMusic");
-  const btn   = document.getElementById("musicBtn");
-  const icon  = document.getElementById("musicIcon");
-  let playing = false;
-
-  document.addEventListener("click", function tryPlay() {
-    if (!playing) { music.play().then(() => { playing = true; btn.classList.add("playing"); icon.textContent = "♫"; }); }
-    document.removeEventListener("click", tryPlay);
-  }, { once: true });
-
-  function toggleMusic() {
-    if (playing) { music.pause(); playing = false; btn.classList.remove("playing"); icon.textContent = "♪"; }
-    else { music.play(); playing = true; btn.classList.add("playing"); icon.textContent = "♫"; }
-  }
 </script>
 </body>
 </html>
